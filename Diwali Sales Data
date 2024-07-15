@@ -1,0 +1,82 @@
+# Install necessary packages if not already installed
+install.packages(c("dplyr", "ggplot2", "readr", "tidyr"))
+
+# Load libraries
+library(dplyr)
+library(ggplot2)
+library(readr)
+library(tidyr)
+
+# Import CSV file
+df <- read_csv('Diwali Sales Data.csv')
+
+# Drop unrelated/blank columns
+df <- df %>%
+  select(-c(Status, unnamed1))
+
+# Check for null values
+sapply(df, function(x) sum(is.na(x)))
+
+# Drop rows with null values
+df <- drop_na(df)
+
+# Change data type of 'Amount'
+df$Amount <- as.integer(df$Amount)
+
+# Get a summary of the data
+summary(df)
+
+# Summary of specific columns
+summary(select(df, Age, Orders, Amount))
+
+# Plotting a bar chart for Gender and its count
+ggplot(df, aes(x = Gender)) +
+  geom_bar(fill = "skyblue") +
+  geom_text(stat = 'count', aes(label = ..count..), vjust = -0.5) +
+  labs(title = "Count of Gender", x = "Gender", y = "Count")
+
+# Plotting a bar chart for Gender vs Total Amount
+sales_gen <- df %>%
+  group_by(Gender) %>%
+  summarise(Amount = sum(Amount)) %>%
+  arrange(desc(Amount))
+
+ggplot(sales_gen, aes(x = Gender, y = Amount, fill = Gender)) +
+  geom_bar(stat = 'identity') +
+  labs(title = "Total Amount by Gender", x = "Gender", y = "Total Amount")
+
+# Plotting a bar chart for Age Group and Gender
+ggplot(df, aes(x = `Age Group`, fill = Gender)) +
+  geom_bar(position = 'dodge') +
+  geom_text(stat = 'count', aes(label
+                                
+### Conclusion
+
+## Gender Distribution and Purchasing Power
+
+- Most buyers are females, and they also exhibit higher purchasing power compared to males.
+
+## Age Group Insights
+
+- The age group between 26-35 years shows the highest number of buyers, especially females. This demographic segment contributes significantly to sales.
+
+## Regional Analysis
+
+- States like Uttar Pradesh, Maharashtra, and Karnataka lead in both the number of orders and total sales amount, indicating high market activity during Diwali.
+
+## Marital Status Influence
+
+- Married individuals, particularly women, make up a substantial portion of the customer base and tend to spend more, reflecting strong purchasing behavior among this demographic.
+
+## Occupational Patterns
+
+- Occupations in sectors such as IT, Healthcare, and Aviation show higher engagement in purchasing during Diwali, suggesting targeted marketing strategies towards these professionals could be effective.
+
+## Product Category Insights
+
+- The most popular product categories include Food, Clothing, and Electronics, with significant sales volumes. This insight could guide inventory management and promotional strategies.
+
+## Top Selling Products
+
+- Specific products, identified by their unique IDs, show consistently high sales numbers. These top-selling products represent opportunities for further analysis or targeted marketing efforts.
+New File at / · ameyashirsate/Portfolio-Project
